@@ -15,6 +15,6 @@
     "go.formatTool": "goreturns",
     "go.formatFlags": [],
     "go.goroot": "/usr/local/go",
-    "go.gopath": "/Users/raymon/Documents/Ayukey_Go",
+    "go.gopath": "/Users/ayukey/Documents/Ayukey_Go",
     "go.gocodeAutoBuild": false
 }
