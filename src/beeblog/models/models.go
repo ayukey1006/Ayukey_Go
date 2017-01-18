@@ -3,7 +3,10 @@ package models
 import (
 	"os"
 	"path"
+	"strconv"
 	"time"
+
+	"fmt"
 
 	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/orm"
@@ -49,4 +52,46 @@ func RegisterDB() {
 	orm.RegisterModel(new(Category), new(Topic))
 	orm.RegisterDriver(_SQLITE3_DRIVER, orm.DRSqlite)
 	orm.RegisterDataBase("default", _SQLITE3_DRIVER, _DB_NAME, 10)
+}
+
+func AddCateGory(name string) error {
+	o := orm.NewOrm()
+	cate := &Category{
+		Title:     name,
+		Created:   time.Now(),
+		TopicTime: time.Now(),
+	}
+
+	qs := o.QueryTable("category")
+	err := qs.Filter("title", name).One(cate)
+	if err == nil {
+		return fmt.Errorf("该分类已经存在")
+	}
+
+	_, err = o.Insert(cate)
+	return err
+}
+
+func DelCategory(id string) error {
+	cid, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	o := orm.NewOrm()
+	cate := Category{Id: cid}
+	_, err = o.Delete(&cate)
+	return err
+}
+
+func GetAllCategories() ([]*Category, error) {
+	o := orm.NewOrm()
+
+	cates := make([]*Category, 0)
+
+	qs := o.QueryTable("category")
+
+	_, err := qs.All(&cates)
+
+	return cates, err
 }
