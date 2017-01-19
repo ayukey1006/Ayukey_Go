@@ -10,13 +10,15 @@
         </div>
 
         <div class="container">
+            {{range .Topics}}
             <div class="page-header">
-                <h1>我的第一个博客</h1>
-                <h6 class="text-muted">文章发表于xxxx年</h6>
+                <h1>{{.Title}}</h1>
+                <h6 class="text-muted">文章发表于{{.Created}}，共有{{.Views}}游览,{{.ReplyCount}}个评论</h6>
                 <p>
-                    大家好，这是我的第一篇博客
+                    {{.Content}}
                 </p>
             </div>    
+            {{end}}
         </div>
         
         <script type="text/javascript" src="https://cdn.staticfile.org/jquery/3.1.1/jquery.min.js"></script>

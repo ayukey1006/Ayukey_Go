@@ -95,3 +95,75 @@ func GetAllCategories() ([]*Category, error) {
 
 	return cates, err
 }
+
+func AddTopic(title, content string) error {
+	o := orm.NewOrm()
+	topic := Topic{
+		Title:     title,
+		Content:   content,
+		Created:   time.Now(),
+		Updated:   time.Now(),
+		ReplyTime: time.Now(),
+	}
+
+	_, err := o.Insert(&topic)
+	return err
+}
+
+func GetAllTopics(isDesc bool) ([]*Topic, error) {
+	o := orm.NewOrm()
+	topics := make([]*Topic, 0)
+
+	qs := o.QueryTable("topic")
+
+	var err error
+	if isDesc {
+		_, err = qs.OrderBy("-created").All(&topics)
+	} else {
+		_, err = qs.All(&topics)
+	}
+
+	return topics, err
+}
+
+func GetTopic(id string) (*Topic, error) {
+	tid, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	o := orm.NewOrm()
+	topic := &Topic{
+		Id: tid,
+	}
+
+	qs := o.QueryTable("topic")
+	err = qs.Filter("Id", tid).One(topic)
+	if err != nil {
+		return nil, err
+	}
+
+	topic.Views++
+
+	_, err = o.Update(topic)
+	return topic, err
+}
+
+func ModifyTopic(id, title, content string) error {
+	tid, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	o := orm.NewOrm()
+	topic := &Topic{
+		Id: tid,
+	}
+
+	if o.Read(topic) == nil {
+		topic.Title = title
+		topic.Content = content
+		topic.Updated = time.Now()
+	}
+	qs := o.QueryTable("topic")
+}
