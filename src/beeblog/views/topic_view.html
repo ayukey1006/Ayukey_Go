@@ -9,13 +9,26 @@
             </div>
         </div>
 
-        <div class="container">
-            <h1>{{.Topic.Title}}<a href="/topic/modify?tid={{.Tid}}" class="btn btn-default">修改文章</a></h1>
-            
-            {{.Topic.Content}}
+        <div class="container">   
+            {{$tags :=.Tags}}  
+            {{with .Topic}}
+            <h1>{{.Title}} <small>{{.Category}}</small></h1>
+            <h5>
+                {{range $tags}}
+                <a href="/?tag={{.}}">{{.}}</a>
+                {{end}}
+            </h5>
+            {{.Content}}
+            {{end}}       
         </div>
     
         <div class="container">
+            {{$tid := .Topic.Id}}
+            {{$isLogin := .IsLogin}}
+            {{range .Replies}}
+            <h3>{{.Name}} <small>{{.Created}}</small>{{if $isLogin}}<a href="/reply/delete?tid={{$tid}}&rid={{.Id}}">删除</a>{{end}}</h3>
+            {{.Content}}
+            {{end}}
             <h3>本文回复</h3>
             <form method="post" action="/reply/add">
                 <input type="hidden" name="tid" value="{{.Topic.Id}}">
