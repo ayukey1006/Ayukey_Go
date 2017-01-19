@@ -6,6 +6,9 @@ import (
 
 	"strings"
 
+	"os"
+	"path"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -28,19 +31,20 @@ type Topic struct {
 }
 
 //添加文章
-func AddTopic(title, content, category, tag string) error {
+func AddTopic(title, content, category, tag, attachment string) error {
 	tag = "$" + strings.Join(strings.Split(tag, " "), "#$") + "#"
 
 	o := orm.NewOrm()
 
 	topic := Topic{
-		Title:     title,
-		Content:   content,
-		Tags:      tag,
-		Category:  category,
-		Created:   time.Now(),
-		Updated:   time.Now(),
-		ReplyTime: time.Now(),
+		Title:      title,
+		Content:    content,
+		Tags:       tag,
+		Category:   category,
+		Created:    time.Now(),
+		Updated:    time.Now(),
+		ReplyTime:  time.Now(),
+		Attachment: attachment,
 	}
 
 	_, err := o.Insert(&topic)
@@ -64,7 +68,7 @@ func DeleteTopic(id string) error {
 }
 
 //修改文章
-func ModifyTopic(id, title, content, category, tag string) error {
+func ModifyTopic(id, title, content, category, tag, attachment string) error {
 	tag = "$" + strings.Join(strings.Split(tag, " "), "#$") + "#"
 
 	tid, err := strconv.ParseInt(id, 10, 64)
@@ -77,14 +81,23 @@ func ModifyTopic(id, title, content, category, tag string) error {
 		Id: tid,
 	}
 
+	var oldAttach string
+
 	if o.Read(topic) == nil {
+		oldAttach = topic.Attachment
 		topic.Title = title
 		topic.Tags = tag
 		topic.Category = category
 		topic.Content = content
 		topic.Updated = time.Now()
+		topic.Attachment = attachment
 		o.Update(topic)
 	}
+
+	if len(oldAttach) > 0 {
+		os.Remove(path.Join("attachment", oldAttach))
+	}
+
 	return nil
 }
 

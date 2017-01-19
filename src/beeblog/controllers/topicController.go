@@ -5,6 +5,8 @@ import (
 
 	"strings"
 
+	"path"
+
 	"github.com/astaxie/beego"
 )
 
@@ -40,8 +42,23 @@ func (self *TopicController) Post() {
 	category := self.Input().Get("category")
 	tag := self.Input().Get("tag")
 
+	_, fh, err := self.GetFile("attachment")
+	if err != nil {
+		beego.Error(err)
+	}
+
+	var attachment string
+	if fh != nil {
+		attachment = fh.Filename
+		beego.Info(attachment)
+		err = self.SaveToFile("attachment", path.Join("attachment", attachment))
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+
 	if len(tid) == 0 {
-		err = models.AddTopic(title, content, category, tag)
+		err = models.AddTopic(title, content, category, tag, attachment)
 		if err != nil {
 			beego.Error(err)
 		} else {
@@ -55,7 +72,7 @@ func (self *TopicController) Post() {
 		if err != nil {
 			beego.Error(err)
 		} else {
-			err = models.ModifyTopic(tid, title, content, category, tag)
+			err = models.ModifyTopic(tid, title, content, category, tag, attachment)
 			if err != nil {
 				beego.Error(err)
 			} else {
