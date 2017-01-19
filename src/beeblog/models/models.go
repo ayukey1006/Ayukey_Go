@@ -32,6 +32,7 @@ type Topic struct {
 	Id              int64
 	Uid             int64
 	Title           string
+	Category        string
 	Content         string `orm:"size(5000)"`
 	Attachment      string
 	Created         time.Time `orm:"index"`
@@ -43,13 +44,21 @@ type Topic struct {
 	ReplyLastUserId int64
 }
 
+type Comment struct {
+	Id      int64
+	Tid     int64
+	Name    string
+	Content string    `orm:"size(1000)"`
+	Created time.Time `orm:"index"`
+}
+
 func RegisterDB() {
 	if !com.IsExist(_DB_NAME) {
 		os.MkdirAll(path.Dir(_DB_NAME), os.ModePerm)
 		os.Create(_DB_NAME)
 	}
 
-	orm.RegisterModel(new(Category), new(Topic))
+	orm.RegisterModel(new(Category), new(Topic), new(Comment))
 	orm.RegisterDriver(_SQLITE3_DRIVER, orm.DRSqlite)
 	orm.RegisterDataBase("default", _SQLITE3_DRIVER, _DB_NAME, 10)
 }
@@ -96,11 +105,12 @@ func GetAllCategories() ([]*Category, error) {
 	return cates, err
 }
 
-func AddTopic(title, content string) error {
+func AddTopic(title, content, category string) error {
 	o := orm.NewOrm()
 	topic := Topic{
 		Title:     title,
 		Content:   content,
+		Category:  category,
 		Created:   time.Now(),
 		Updated:   time.Now(),
 		ReplyTime: time.Now(),
@@ -149,7 +159,7 @@ func GetTopic(id string) (*Topic, error) {
 	return topic, err
 }
 
-func ModifyTopic(id, title, content string) error {
+func ModifyTopic(id, title, content, category string) error {
 	tid, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		return err
@@ -162,8 +172,43 @@ func ModifyTopic(id, title, content string) error {
 
 	if o.Read(topic) == nil {
 		topic.Title = title
+		topic.Category = category
 		topic.Content = content
 		topic.Updated = time.Now()
+		o.Update(topic)
 	}
-	qs := o.QueryTable("topic")
+	return nil
+}
+
+func DeleteTopic(id string) error {
+	tid, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	o := orm.NewOrm()
+	topic := &Topic{
+		Id: tid,
+	}
+
+	_, err = o.Delete(topic)
+	return err
+}
+
+func AddReply(tid, nickname, content string) error {
+	tidNum, err := strconv.ParseInt(tid, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	reply := &Comment{
+		Id:      tidNum,
+		Name:    nickname,
+		Content: content,
+		Created: time.Now(),
+	}
+
+	o := orm.NewOrm()
+	_, err = o.Insert(reply)
+	return err
 }

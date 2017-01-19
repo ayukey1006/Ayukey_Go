@@ -33,14 +33,16 @@ func (self *TopicController) Post() {
 	var err error
 	title := self.Input().Get("title")
 	content := self.Input().Get("content")
+	category := self.Input().Get("category")
 	tid := self.Input().Get("tid")
 	if len(tid) == 0 {
-		err = models.AddTopic(title, content)
-		if err != nil {
-			beego.Error(err)
-		}
+		err = models.AddTopic(title, content, category)
 	} else {
+		err = models.ModifyTopic(tid, title, content, category)
+	}
 
+	if err != nil {
+		beego.Error(err)
 	}
 
 	self.Redirect("/topic", 302)
@@ -73,4 +75,19 @@ func (self *TopicController) Modify() {
 	self.Data["Topic"] = topic
 	self.Data["Tid"] = tid
 	self.TplName = "topic_modify.html"
+}
+
+func (self *TopicController) Delete() {
+	if !checkAccount(self.Ctx) {
+		self.Redirect("/login", 302)
+		return
+	}
+
+	err := models.DeleteTopic(self.Ctx.Input.Params()["0"])
+
+	if err != nil {
+		beego.Error(err)
+	}
+
+	self.Redirect("/", 302)
 }
