@@ -19,7 +19,7 @@ func (self *MiddleWare)ServeHTTP(w http.ResponseWriter, r *http.Request)  {
     }
     w.Header().Set("go-web-foundation","vip")
     w.WriteHeader(418)
-    w.Write([]byte("hey!"))
+    w.Write([]byte("hey!")
     w.Write(rec.Body.Bytes())
 }
 
