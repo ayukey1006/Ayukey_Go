@@ -1,0 +1,41 @@
+{{template "base/base.html" .}} {{define "header"}}
+<title>登录</title>
+{{end}} {{define "body"}}
+<div class="col-md-6 col-md-offset-3 container">
+    <img class="col-md-2 col-md-offset-5 img-rounded" src=" /static/img/favicon.png " style="width: 100px;height: 100px">
+    <form method="POST " action="/center ">
+        <div class="col-md-6 col-md-offset-3 form-group ">
+            <input id="uname " class="form-control " placeholder="Enter account " name="uname ">
+        </div>
+        <div class="col-md-6 col-md-offset-3 form-group ">
+            <input id="pwd " type="password " class="form-control " placeholder="Password " name="pwd ">
+        </div>
+        <div class="col-md-2 col-md-offset-5 form-group ">
+            <button type="submit " class="btn btn-default " onclick="return checkInput() ">登录</button>
+        </div>
+    </form>
+
+    <script type="text/javascript ">
+        function checkInput() {
+            var uname = document.getElementById("uname ");
+            if (uname.value.length == 0) {
+                alert("请输入账号 ");
+                return false
+            }
+
+            var pwd = document.getElementById("pwd ")
+            if (pwd.value.length == 0) {
+                alert("请输入密码 ");
+                return false
+            }
+
+            return true
+        }
+
+        // function backToHome() {
+        //     window.location.href = "/ ";
+        //     return false
+        // }
+    </script>
+</div>
+{{end}}

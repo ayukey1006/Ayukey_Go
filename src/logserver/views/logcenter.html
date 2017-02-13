@@ -1,0 +1,43 @@
+{{template "base/base.html" .}} {{define "header"}}
+<title>消息中心</title>
+{{end}} {{define "body"}}
+<div class="col-md-6 col-md-offset-3 container">
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            asdasdqweqweqjwhejhqwjehqjkehwjkqhwehqewjkqhwejh
+        <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#123123" onclick="return changeButton()">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+        </ul>
+    </div>
+
+
+    <script type="text/javascript ">
+        function changeButton() {
+            var select = document.getElementById("dropdownMenu1")
+            select.value = "Action"
+                // var uname = document.getElementById("uname ");
+                // if (uname.value.length == 0) {
+                //     alert("请输入账号 ");
+                //     return false
+                // }
+
+            // var pwd = document.getElementById("pwd ")
+            // if (pwd.value.length == 0) {
+            //     alert("请输入密码 ");
+            //     return false
+            // }
+
+            return true
+        }
+
+        function backToHome() {
+            window.location.href = "/ ";
+            return false
+        }
+    </script>
+</div>
+{{end}}
