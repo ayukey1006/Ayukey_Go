@@ -23,9 +23,11 @@
 
 <script type="text/javascript ">
     $(function() {
+        console.log($(".dropdown-menu").html())
         $(".dropdown-menu a").click(function() {
             value = $(this).attr("name");
-            console.log(value)
+            $("#dropdownMenu1").text(value);
+
         })
     })
 
