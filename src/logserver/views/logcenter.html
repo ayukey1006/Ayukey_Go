@@ -4,40 +4,53 @@
 <div class="col-md-6 col-md-offset-3 container">
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            asdasdqweqweqjwhejhqwjehqjkehwjkqhwehqewjkqhwejh
+            请选择你所要的设备
         <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li><a href="#123123" onclick="return changeButton()">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
+            {{if .HasDevice}} {{range .Devices}}
+            <li><a name="{{.IPAddress}}">{{.Name}}</a></li>
+            {{end}} {{else}}
+            <li><a href="#">无记录</a></li> {{end}}
         </ul>
     </div>
-
-
-    <script type="text/javascript ">
-        function changeButton() {
-            var select = document.getElementById("dropdownMenu1")
-            select.value = "Action"
-                // var uname = document.getElementById("uname ");
-                // if (uname.value.length == 0) {
-                //     alert("请输入账号 ");
-                //     return false
-                // }
-
-            // var pwd = document.getElementById("pwd ")
-            // if (pwd.value.length == 0) {
-            //     alert("请输入密码 ");
-            //     return false
-            // }
-
-            return true
-        }
-
-        function backToHome() {
-            window.location.href = "/ ";
-            return false
-        }
-    </script>
 </div>
+
+
+<div class="container">
+
+</div>
+
+<script type="text/javascript ">
+    $(function() {
+        $(".dropdown-menu a").click(function() {
+            value = $(this).attr("name");
+            console.log(value)
+        })
+    })
+
+    function connectDevice() {
+        socket = new WebSocket('ws://' + window.location.host + '/ws/join?uname=' + $('#uname').text());
+        // Message received on the socket
+        socket.onmessage = function(event) {
+            var data = JSON.parse(event.data);
+            console.log(data);
+            switch (data.Type) {
+                case 0: // JOIN
+                    if (data.User == $('#uname').text()) {
+                        $("#chatbox li").first().before("<li>You joined the chat room.</li>");
+                    } else {
+                        $("#chatbox li").first().before("<li>" + data.User + " joined the chat room.</li>");
+                    }
+                    break;
+                case 1: // LEAVE
+                    $("#chatbox li").first().before("<li>" + data.User + " left the chat room.</li>");
+                    break;
+                case 2: // MESSAGE
+                    $("#chatbox li").first().before("<li><b>" + data.User + "</b>: " + data.Content + "</li>");
+                    break;
+            }
+        };
+    }
+</script>
 {{end}}

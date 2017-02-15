@@ -31,6 +31,7 @@ type WebSocketController struct {
 
 // Get method handles GET requests for WebSocketController.
 func (this *WebSocketController) Get() {
+	beego.Info("Get进入")
 	// Safe check.
 	uname := this.GetString("uname")
 	if len(uname) == 0 {
@@ -45,6 +46,7 @@ func (this *WebSocketController) Get() {
 
 // Join method handles WebSocket requests for WebSocketController.
 func (this *WebSocketController) Join() {
+	beego.Info("Join进入")
 	uname := this.GetString("uname")
 	if len(uname) == 0 {
 		this.Redirect("/", 302)

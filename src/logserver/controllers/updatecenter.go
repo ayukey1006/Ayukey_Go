@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"logserver/models"
 
-	"log"
-
 	"github.com/astaxie/beego"
 )
 
@@ -14,32 +12,34 @@ type UpdateCenterController struct {
 }
 
 func (self *UpdateCenterController) UpdateDevice() {
-	id := self.Input().Get("device_id")
-	name := self.Input().Get("device_name")
-	ip := self.Input().Get("device_ip")
+	var device models.Device
+	json.Unmarshal(self.Ctx.Input.RequestBody, &device)
+	beego.Info("传入参数:", device.Name)
 
 	code := 0
 	msg := "操作成功"
 
-	if len(id) == 0 {
+	if len(device.DeviceID) == 0 {
 		code = -1
 		msg = "device_id不能为空"
 	}
 
-	if len(name) == 0 {
+	if len(device.Name) == 0 {
 		code = -1
 		msg = "device_name不能为空"
 	}
 
-	if len(ip) == 0 {
+	if len(device.IPAddress) == 0 {
 		code = -1
 		msg = "device_ip不能为空"
 	}
 
-	err := models.UpdateDevice(id, name, ip)
-	if err != nil {
-		code = -1
-		msg = err.Error()
+	if code == 0 {
+		err := models.UpdateDevice(device.DeviceID, device.Name, device.IPAddress)
+		if err != nil {
+			code = -1
+			msg = err.Error()
+		}
 	}
 
 	rs := LResponse{
@@ -54,12 +54,11 @@ func (self *UpdateCenterController) UpdateDevice() {
 		return
 	}
 
-	log.Println(string(b))
 	self.Ctx.WriteString(string(b))
 
 }
 
 type LResponse struct {
-	Code int    
-	Msg  string 
+	Code int
+	Msg  string
 }
