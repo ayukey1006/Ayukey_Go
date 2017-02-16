@@ -12,6 +12,8 @@ type UpdateCenterController struct {
 }
 
 func (self *UpdateCenterController) UpdateDevice() {
+	beego.Info(self.Ctx.Request.RemoteAddr)
+
 	var device models.Device
 	json.Unmarshal(self.Ctx.Input.RequestBody, &device)
 	beego.Info("传入参数:", device.Name)
