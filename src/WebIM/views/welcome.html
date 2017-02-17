@@ -1,4 +1,4 @@
-{{template "base/base.html" .}}
+<!--{{template "base/base.html" .}}
 {{define "head"}}
 <title>{{i18n .Lang "welcome"}} - {{i18n .Lang "app_intro"}}</title>
 {{end}}
@@ -31,4 +31,25 @@
         </div>
     </form>
 </div>
-{{end}}
+{{end}}-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>测试页面</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <form id="testform">
+        <input type="submit" name="s1" value="v1" formaction="/A"> 提交A
+        <input type="submit" name="s2" value="v2" formaction="/B"> 提交B
+        <input type="submit" name="s3" value="v3" formaction="/B"> 提交C
+    </form>
+</body>
+
+</html>
