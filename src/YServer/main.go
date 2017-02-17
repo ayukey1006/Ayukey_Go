@@ -18,14 +18,17 @@ func main() {
 	err := http.ListenAndServe(":9012", nil)
 
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln("JC", err)
 	}
 }
 
 func webSocketServer(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.Header["Upgrade"])
+
 	con, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
+		return
 	}
 
 	keepAlive(con, 5*time.Second)
@@ -46,11 +49,13 @@ func keepAlive(c *websocket.Conn, timeout time.Duration) {
 				return
 			}
 			log.Println("发送Pong包")
-			time.Sleep(timeout / 2)
-			if time.Now().Sub(lastResponse) > timeout {
-				c.Close()
-				return
-			}
+			c.Close()
+			return
+			// time.Sleep(timeout / 2)
+			// if time.Now().Sub(lastResponse) > timeout {
+			// 	c.Close()
+			// 	return
+			// }
 		}
 	}()
 }
