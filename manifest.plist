@@ -11,31 +11,19 @@
 					<key>kind</key>
 					<string>software-package</string>
 					<key>url</key>
-					<string>https://github.com/ayukey1006/Ayukey_Go/raw/master/NextCont.ipa</string>
-				</dict>
-				<dict>
-					<key>kind</key>
-					<string>display-image</string>
-					<key>url</key>
-					<string>https://github.com/ayukey1006/Ayukey_Go/raw/master/60.png</string>
-				</dict>
-				<dict>
-					<key>kind</key>
-					<string>full-size-image</string>
-					<key>url</key>
-					<string>https://github.com/ayukey1006/Ayukey_Go/raw/master/60.png</string>
+					<string>http://mb.ztgame.com/download/gdata.ipa</string>
 				</dict>
 			</array>
 			<key>metadata</key>
 			<dict>
 				<key>bundle-identifier</key>
-				<string>com.nextcont.app.iphone</string>
+				<string>com.ztgame.shujubuweb</string>
 				<key>bundle-version</key>
-				<string>2.0.4</string>
+				<string>e1.0</string>
 				<key>kind</key>
 				<string>software</string>
 				<key>title</key>
-				<string>NextCont</string>
+				<string>GData</string>
 			</dict>
 		</dict>
 	</array>
